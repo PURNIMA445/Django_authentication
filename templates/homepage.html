@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Houses Page</title>
+  <!-- Alternative CDN (more stable sometimes) -->
+  <link rel="stylesheet" href="/static/css/homepage.css">
+</head>
+<body>
+
+  {% include "header.html" %}
+
+    {% if user.is_authenticated %}
+    
+    <div class="hamburger" id="hamburger">&#9776;</div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <ul>
+        <li><a href="{% url 'profile' %}"><span class="icon">👤</span><span class="label">Profile</span></a></li>
+        <li><a href="{% url 'settings' %}"><span class="icon">⚙️</span><span class="label">Settings</span></a></li>
+    
+        {% comment %} {% if user.profile.role == 'landlord' %} {% endcomment %}
+          <li><a href="{% url 'add_property' %}"><span class="icon">➕</span><span class="label">Post Property</span></a></li>
+          <li><a href="{% url 'my_listings' %}"><span class="icon">🏠</span><span class="label">My Listings</span></a></li>
+          <li><a href="{% url 'rental_requests' %}"><span class="icon">📩</span><span class="label">Rental Requests</span></a></li>
+        {% comment %} {% elif user.profile.role == 'tenant' %} {% endcomment %}
+          <li><a href="{% url 'search_properties' %}"><span class="icon">🔍</span><span class="label">Search Properties</span></a></li>
+          <li><a href="{% url 'favorites' %}"><span class="icon">⭐</span><span class="label">Favorites</span></a></li>
+          <li><a href="{% url 'my_rentals' %}"><span class="icon">📅</span><span class="label">My Rentals</span></a></li>
+        {% comment %} {% endif %} {% endcomment %}
+    
+        
+      </ul>
+    </aside>
+    
+    {% endif %}
+
+
+    <div class="content" id="content">
+    <!-- This is where content will be dynamically loaded -->
+    <main>
+      {% block content %}
+      <!-- Hero Section -->
+      <section class="hero">
+        <h1>Explore Nepali Houses</h1>
+        <p>Browse available houses for rent across Nepal with detailed descriptions, pricing, and photos.</p>
+      </section>
+      <section class="search-section" aria-labelledby="search-label">
+        <h2 id="search-label">Search Rentals</h2>
+        <form class="search-form" role="search" aria-describedby="search-desc" onsubmit="event.preventDefault(); alert('Search function is not implemented');">
+          <div>
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" placeholder="City, neighborhood, or ZIP" aria-required="true">
+          </div>
+          <div>
+            <label for="price-min">Price Min (NRP)</label>
+            <input type="number" id="price-min" name="price-min" min="0" placeholder="0" aria-required="false">
+          </div>
+          <div>
+            <label for="price-max">Price Max (NRP)</label>
+            <input type="number" id="price-max" name="price-max" min="0" placeholder="Any" aria-required="false">
+          </div>
+          <button type="submit" aria-label="Search Rentals">Search</button>
+        </form>
+      </section>
+      <!-- Houses Grid -->
+      <div class="houses-grid">
+        <!-- Example of a house card -->
+        <div class="house-card">
+          <img src="/static/img/house2.jpg" alt="House 1" class="house-image">
+          <div class="house-details">
+            <h3 class="house-name">Modern Apartment</h3>
+            <p class="house-location">Bharatpur-02,Chitwan</p>
+            <p class="house-price">Rs. 12,000 / month</p>
+            <p class="house-desc">A spacious 2-bedroom apartment with modern amenities.</p>
+          </div>
+        </div>
+
+        <!-- Repeat for other houses -->
+        <div class="house-card">
+          <img src="/static/img/house3.jpg" alt="House 2" class="house-image">
+          <div class="house-details">
+            <h3 class="house-name">Flat</h3>
+            <p class="house-location">Baneshwor,Kathmandu</p>
+            <p class="house-price">Rs. 20,000 / month</p>
+            <p class="house-desc">A charming flat with a beautiful garden.</p>
+          </div>
+        </div>
+
+      </div> <!-- End Houses Grid -->
+      {% endblock %}
+    </main>
+  </div>
+
+  <script src="/static/script/homepage.js">
+  </script>
+</body>
+</html>

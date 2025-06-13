@@ -1,0 +1,154 @@
+<!-- templates/add_property.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <title>Add Property</title>
+  <link rel="stylesheet" href="/static/css/homepage.css">
+  <style>
+    .form-container {
+      max-width: 600px;
+      margin: 100px auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-container label {
+      font-weight: bold;
+    }
+    .form-container input, .form-container select, .form-container textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 12px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background-color: #45a049;
+    }
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center; /* vertical center */
+      gap: 5px; /* space between checkbox and text */
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  {% include "header.html" %}
+
+  {% if user.is_authenticated %}
+  <div class="hamburger" id="hamburger">&#9776;</div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="{% url 'profile' %}"><span class="icon">👤</span><span class="label">Profile</span></a></li>
+      <li><a href="{% url 'settings' %}"><span class="icon">⚙️</span><span class="label">Settings</span></a></li>
+  
+      {% comment %} {% if user.profile.role == 'landlord' %} {% endcomment %}
+        <li><a href="{% url 'add_property' %}"><span class="icon">➕</span><span class="label">Post Property</span></a></li>
+        <li><a href="{% url 'my_listings' %}"><span class="icon">🏠</span><span class="label">My Listings</span></a></li>
+        <li><a href="{% url 'rental_requests' %}"><span class="icon">📩</span><span class="label">Rental Requests</span></a></li>
+      {% comment %} {% elif user.profile.role == 'tenant' %} {% endcomment %}
+        <li><a href="{% url 'search_properties' %}"><span class="icon">🔍</span><span class="label">Search Properties</span></a></li>
+        <li><a href="{% url 'favorites' %}"><span class="icon">⭐</span><span class="label">Favorites</span></a></li>
+        <li><a href="{% url 'my_rentals' %}"><span class="icon">📅</span><span class="label">My Rentals</span></a></li>
+      {% comment %} {% endif %} {% endcomment %}
+  
+      
+    </ul>
+  </aside>
+  {% endif %}
+
+  <!-- Property Form -->
+  <div class="form-container">
+    <h2>Post Your Property</h2>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+    
+      <!-- Render all fields except checkboxes -->
+      {% for field in form %}
+        {% if field.name != 'furnished' and field.name != 'is_available' %}
+          <p>
+            {{ field.label_tag }} {{ field }}
+            {% if field.errors %}
+              <div style="color: red; font-size: 0.9em;">
+                {% for error in field.errors %}
+                  {{ error }}<br>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </p>
+        {% endif %}
+      {% endfor %}
+    
+      <!-- Render checkboxes manually for better alignment -->
+      <p>
+        <label class="checkbox-label">
+          {{ form.furnished }} Furnished
+          {% if form.furnished.errors %}
+            <div style="color: red; font-size: 0.9em;">
+              {% for error in form.furnished.errors %}
+                {{ error }}<br>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </label>
+      </p>
+      <p>
+        <label class="checkbox-label">
+          {{ form.is_available }} Available
+          {% if form.is_available.errors %}
+            <div style="color: red; font-size: 0.9em;">
+              {% for error in form.is_available.errors %}
+                {{ error }}<br>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </label>
+      </p>
+    
+      <button type="submit">Submit</button>
+    </form>
+    
+  </div>
+  
+
+  <script>
+    const hamburger = document.getElementById("hamburger");
+const sidebar = document.getElementById("sidebar");
+
+hamburger.addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+
+    // Toggle icon
+    if (sidebar.classList.contains("open")) {
+        hamburger.innerHTML = "&times;"; // ✖
+    } else {
+        hamburger.innerHTML = "&#9776;"; // ☰
+    }
+});
+  </script>
+
+</body>
+</html>
